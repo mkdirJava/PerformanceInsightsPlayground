@@ -1,0 +1,116 @@
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+    - 9010:9090
+    command:
+    - --config.file=/etc/prometheus/prometheus.yaml
+    volumes:
+    - ./prometheus.yaml:/etc/prometheus/prometheus.yaml:ro
+    depends_on:
+    - cadvisor
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    ports:
+    - 8080:8080
+    volumes:
+    - /:/rootfs:ro
+    - /var/run:/var/run:rw
+    - /sys:/sys:ro
+    - /var/lib/docker/:/var/lib/docker:ro
+    depends_on:
+    - spring_boot_jvm
+    - spring_boot_native
+    - java_se_native
+    - quarkus_native
+    - go_http
+    - go_gin
+    - go_echo
+
+  spring_boot_native:
+    image: "spring_boot_native"
+    ports:
+      - 9094:8080
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 800M
+        reservations:
+          cpus: '1'
+          memory: 200M
+  spring_boot_jvm:
+    image: "spring_boot_test:0.0.1-SNAPSHOT"
+    ports:
+      - 9093:8080
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 800M
+        reservations:
+          cpus: '1'
+          memory: 200M
+  java_se_native:
+    image: "java_se_native"
+    ports:
+      - 9092:8090
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 800M
+        reservations:
+          cpus: '1'
+          memory: 200M
+  quarkus_native:
+    image: "quarkus_native"
+    ports:
+      - 9091:8080
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 800M
+        reservations:
+          cpus: '1'
+          memory: 200M
+  go_http:
+    image: "go_http"
+    ports:
+      - 9090:8080
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 800M
+        reservations:
+          cpus: '1'
+          memory: 200M
+  go_gin:
+    image: "go_gin"
+    ports:
+      - 9095:8080
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 800M
+        reservations:
+          cpus: '1'
+          memory: 200M
+  go_echo:
+    image: "go_echo"
+    ports:
+      - 9096:8080
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 800M
+        reservations:
+          cpus: '1'
+          memory: 200M
+

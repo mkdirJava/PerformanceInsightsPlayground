@@ -1,0 +1,95 @@
+Running 10s test @ http://localhost:9090/test
+  100 goroutine(s) running concurrently
+239208 requests in 9.980762185s, 23.50MB read
+Requests/sec:		23966.91
+Transfer/sec:		2.35MB
+Overall Requests/sec:	23831.80
+Overall Transfer/sec:	2.34MB
+Fastest Request:	0s
+Avg Req Time:		4.171ms
+Slowest Request:	123.647ms
+Number of Errors:	0
+10%:			0s
+50%:			506µs
+75%:			510µs
+99%:			513µs
+99.9%:			513µs
+99.9999%:		513µs
+99.99999%:		513µs
+stddev:			6.389ms
+Running 10s test @ http://localhost:9090/test
+  100 goroutine(s) running concurrently
+193476 requests in 9.981291512s, 19.00MB read
+Requests/sec:		19383.86
+Transfer/sec:		1.90MB
+Overall Requests/sec:	19282.58
+Overall Transfer/sec:	1.89MB
+Fastest Request:	0s
+Avg Req Time:		5.158ms
+Slowest Request:	153.303ms
+Number of Errors:	0
+10%:			0s
+50%:			510µs
+75%:			515µs
+99%:			525µs
+99.9%:			525µs
+99.9999%:		525µs
+99.99999%:		525µs
+stddev:			7.747ms
+Running 10s test @ http://localhost:9090/test
+  100 goroutine(s) running concurrently
+192451 requests in 9.983279292s, 18.90MB read
+Requests/sec:		19277.33
+Transfer/sec:		1.89MB
+Overall Requests/sec:	19168.08
+Overall Transfer/sec:	1.88MB
+Fastest Request:	0s
+Avg Req Time:		5.187ms
+Slowest Request:	127.547ms
+Number of Errors:	0
+10%:			0s
+50%:			506µs
+75%:			513µs
+99%:			518µs
+99.9%:			518µs
+99.9999%:		518µs
+99.99999%:		518µs
+stddev:			7.657ms
+Running 10s test @ http://localhost:9090/test
+  100 goroutine(s) running concurrently
+194541 requests in 9.979289917s, 19.11MB read
+Requests/sec:		19494.47
+Transfer/sec:		1.91MB
+Overall Requests/sec:	19393.77
+Overall Transfer/sec:	1.91MB
+Fastest Request:	0s
+Avg Req Time:		5.129ms
+Slowest Request:	118.835ms
+Number of Errors:	0
+10%:			0s
+50%:			505µs
+75%:			509µs
+99%:			514µs
+99.9%:			515µs
+99.9999%:		515µs
+99.99999%:		515µs
+stddev:			7.716ms
+Running 10s test @ http://localhost:9090/test
+  100 goroutine(s) running concurrently
+226559 requests in 9.983375192s, 22.25MB read
+Requests/sec:		22693.63
+Transfer/sec:		2.23MB
+Overall Requests/sec:	22563.99
+Overall Transfer/sec:	2.22MB
+Fastest Request:	0s
+Avg Req Time:		4.406ms
+Slowest Request:	127.479ms
+Number of Errors:	0
+10%:			0s
+50%:			506µs
+75%:			512µs
+99%:			516µs
+99.9%:			517µs
+99.9999%:		517µs
+99.99999%:		517µs
+stddev:			6.856ms

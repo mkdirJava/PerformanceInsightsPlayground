@@ -1,0 +1,134 @@
+
+services:
+
+  java_se_kafka_producer:
+    image: java_se_kafka_producer
+    environment:
+      - BROKER=kafka:29092
+      - TOPIC=bench-test
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 1600M 
+        reservations:
+          cpus: '2'
+          memory: 400M
+
+  java_se_kafka_consumer:
+    image: java_se_kafka_consumer
+    profiles: 
+      - startup
+    environment:
+      - BROKER=kafka:29092
+      - TOPIC=bench-test
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 800M
+        reservations:
+          cpus: '1'
+          memory: 200M
+
+  go_kafka_consumer:
+    image: go_kafka_consumer
+    container_name: go_kafka_consumer
+    hostname: goKafkaConsumer
+    profiles: 
+      - startup
+    environment:
+      - BROKER=kafka:29092
+      - TOPIC=bench-test
+      - BOOTSTRAP_SERVERS=kafka:9092
+      - GROUP_ID=go_kafka_consumer
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 800M
+        reservations:
+          cpus: '1'
+          memory: 200M
+
+  grafana:
+    image: grafana/grafana
+    profiles: 
+      - startup
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=grafana
+    volumes:
+      - ./grafana:/etc/grafana/provisioning/datasources
+    depends_on:
+      - prometheus
+
+  prometheus:
+    image: prom/prometheus:latest
+    profiles: 
+      - startup
+    ports:
+    - 9010:9090
+    command:
+    - --config.file=/etc/prometheus/prometheus.yaml
+    volumes:
+    - ./prometheus.yaml:/etc/prometheus/prometheus.yaml:ro
+    depends_on:
+    - cadvisor
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    profiles: 
+      - startup
+    ports:
+    - 8080:8080
+    volumes:
+    - /:/rootfs:ro
+    - /var/run:/var/run:rw
+    - /sys:/sys:ro
+    - /var/lib/docker/:/var/lib/docker:rwo
+    depends_on:
+    - zoo
+    - kafka
+    - java_se_kafka_consumer
+    - go_kafka_consumer
+
+  zoo:
+    image: confluentinc/cp-zookeeper:7.3.2
+    profiles: 
+      - startup
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_SERVERS: zoo:2888:3888
+
+  kafka:
+    image: confluentinc/cp-kafka:7.3.2
+    profiles: 
+      - startup
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+      - "9999:9999"
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:19092,EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9092,DOCKER://host.docker.internal:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,DOCKER:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_ZOOKEEPER_CONNECT: "zoo:2181"
+      KAFKA_BROKER_ID: 1
+      KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_JMX_PORT: 9001
+      KAFKA_JMX_HOSTNAME: ${DOCKER_HOST_IP:-127.0.0.1}
+      KAFKA_AUTHORIZER_CLASS_NAME: kafka.security.authorizer.AclAuthorizer
+      KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "true"
+      command: "bash -c 'docker exec kafka sh -c \"sleep 10 && kafka-topics --bootstrap-server kafka:9092 --create --topic bench-test --replication-factor 1 --partitions 1\"'"      
+    depends_on:
+      - zoo

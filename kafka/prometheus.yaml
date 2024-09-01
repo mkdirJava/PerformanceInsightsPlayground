@@ -1,0 +1,24 @@
+scrape_configs:
+- job_name: cadvisor
+  scrape_interval: 5s
+  static_configs:
+  - targets:
+    - cadvisor:8080
+- job_name: go_kafka_consumer
+  scrape_interval: 5s
+  static_configs:
+  - targets:
+    - go_kafka_consumer:8080
+  metrics_path: /metrics
+- job_name: java_se_kafka_consumer
+  scrape_interval: 5s
+  static_configs:
+  - targets:
+    - java_se_kafka_consumer:8080
+  metrics_path: /metrics
+- job_name: java_se_kafka_producer
+  scrape_interval: 5s
+  static_configs:
+  - targets:
+    - java_se_kafka_producer:8080
+  metrics_path: /metrics
